@@ -1,0 +1,134 @@
+package com.masai.controller;
+
+import java.util.List;
+
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.masai.exception.ProductException;
+import com.masai.model.Category;
+import com.masai.model.Products;
+import com.masai.model.ProductsDTO;
+import com.masai.service.ProductsService;
+
+import jakarta.validation.Valid;
+
+@RestController
+public class ProductsController {
+	@Autowired
+	private ProductsService ppService;
+	
+	
+	@PostMapping("/addnewproducts")
+	public Products saveProductsHandler(@Valid @RequestBody Products product) {
+		
+		return ppService.addProducts(product);
+	}
+	
+	/////////////////////////////////////////////////////////////////
+	
+	@GetMapping("/allproducts")
+	public List<Products> getAllProducts() throws ProductException{
+		
+		return ppService.getAllProducts();
+	}
+	/////////////////////////////////////////////////////////////////
+	
+	@GetMapping("/product/{id}")
+	public ResponseEntity<Products> getProductFromCatalogByIdHandler(@PathVariable("id") Integer id) throws ProductException {
+		
+		Products prod =  ppService.getProductsFromCatalogById(id);
+
+		return new ResponseEntity<Products>(prod, HttpStatus.FOUND);
+
+	}
+/////////////////////////////////////////////////////////////////////
+	@GetMapping("/products/{cat}")
+	public List<ProductsDTO> getCategoryWiseProducts(@PathVariable("cat") Category cat) {
+	
+		return ppService.getCategoryWiseProducts(cat);
+		
+	}
+	
+	//////////////////////////////////////////////////////////////////
+	@DeleteMapping("/deleteproduct/{id}")
+	public ResponseEntity<String> deleteProductFromCatalogHandler(@PathVariable("id") Integer id) throws ProductException {
+		
+		String res = ppService.deleteProductFromCatalog(id);
+		return new ResponseEntity<String>(res, HttpStatus.OK);
+	}
+	
+	///////////////////////////////////////////////////////////////////
+	@PutMapping("/updateproducts")
+	public ResponseEntity<Products> updateProductInCatalogHandler(@Valid @RequestBody Products prod) throws ProductException {
+
+		Products prod1 = ppService.updateProductIncatalog(prod);
+
+		return new ResponseEntity<Products>(prod1, HttpStatus.OK);
+
+	}
+}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+//	@GetMapping("/products/{id}")
+//	public Products getProductsById(@PathVariable("id") Integer id) {
+//		
+//		return ppService.getProductFromCatalogById(id);
+//	}
+//	
+//	/////////////////////////////////////////////////////////////////////
+//	
+//	@GetMapping("/test/{id}")
+//	public Products getproductsById(@PathVariable("id") Integer id) {
+//		
+//		return ppService.getproductsById(id);
+//	}
+//	
+//	///////////////////////////////////////////////////////
+//	
+//	@GetMapping("/category/{cat}")
+//	public List<ProductsDTO> getfunctions(@PathVariable("cat") CategoryEnum cat) {
+//		
+//		return ppService.funCategory(cat);
+//	}
+//	
+//	/////////////////////////////////////////////////////////////
+//	@PostMapping("/addcategorywise/{cat}")
+//	public Products addProductsByCategory(@RequestBody @PathVariable("cat") CategoryEnum cat, Products products) {
+//		
+//		return ppService.addProductsByCategory(cat, products);
+//		
+//	}
+	
